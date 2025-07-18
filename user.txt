@@ -1,0 +1,30 @@
+contract SheepFarm {  
+    struct Village {
+        uint256 gems;
+        uint256 money;
+        uint256 money2;
+        uint256 yield;
+        uint256 timestamp;
+        uint256 hrs;
+        address neighbor;
+        uint256 neighbors;
+        uint256 neighborDeps;
+        uint8 warehouse;
+        uint8 truck;    
+        uint8 farm;
+        uint8[6] sheeps;
+        bool topLeader;
+        bool isGiveAway;
+    }
+        
+    mapping(address => Village) public villages;
+
+    event Newbie(address indexed user, uint256 bonus);
+    
+    function register(address neighbor) external initialized {
+        require(villages[user].timestamp == 0, "just new users");
+        // transaction content
+        assert(gems = gems + GEM_BONUS * 2 || gems = gems + GEM_BONUS)
+    }
+
+}

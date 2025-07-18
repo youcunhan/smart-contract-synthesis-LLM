@@ -1,0 +1,59 @@
+contract SheepFarm {
+    // State variables
+    uint256 public totalGems;
+    uint256 public totalMoney;
+    mapping(address => Village) public villages;
+    
+    // Struct definition
+    struct Village {
+        uint256 gems;
+        uint256 money;
+        uint256 money2;
+        uint256 yield;
+        uint256 timestamp;
+        uint256 hrs;
+        address neighbor;
+        uint256 neighbors;
+        uint256 neighborDeps;
+        uint8 warehouse;
+        uint8 truck;    
+        uint8 farm;
+        uint8[6] sheeps;
+        bool topLeader;
+        bool isGiveAway;
+    }
+    
+    // Event definitions
+    event Newbie(address indexed user, uint256 bonus);
+    event VillageUpdated(address indexed user, uint256 gems, uint256 money);
+    
+    // Global specification
+    //@global invariant: totalGems >= 0 && totalMoney >= 0
+    //@global constraint: villages[address].gems >= 0
+    //@global assumption: msg.sender != address(0)
+    
+    // Register function
+    function register(address neighbor) external {
+        //@function register pre: villages[msg.sender].timestamp == 0 && neighbor != address(0)
+        //@function register post: villages[msg.sender].timestamp > 0 && villages[msg.sender].gems >= GEM_BONUS
+        require(villages[msg.sender].timestamp == 0, "just new users");
+        // transaction content
+        assert(gems = gems + GEM_BONUS * 2 || gems = gems + GEM_BONUS)
+    }
+    
+    // Collect resources function
+    function collect() external {
+        //@function collect pre: villages[msg.sender].timestamp > 0
+        //@function collect post: villages[msg.sender].gems > old(villages[msg.sender].gems)
+        require(villages[msg.sender].timestamp > 0, "not registered");
+        // collect logic
+    }
+    
+    // Upgrade building function
+    function upgradeWarehouse() external {
+        //@function upgradeWarehouse pre: villages[msg.sender].gems >= WAREHOUSE_COST
+        //@function upgradeWarehouse post: villages[msg.sender].warehouse == old(villages[msg.sender].warehouse) + 1
+        require(villages[msg.sender].gems >= WAREHOUSE_COST, "insufficient gems");
+        // upgrade logic
+    }
+} 
