@@ -1,0 +1,39 @@
+# Smart Contract Synthesis LLM Configuration
+
+llm:
+  # LLM提供商: "openai", "anthropic", "deepseek"
+  provider: "deepseek"
+  
+  # API密钥 (请替换为你的实际API密钥)
+  api_key: "your-deepseek-api-key-here"
+  
+  # 模型名称
+  model: "deepseek-chat"
+  
+  # 生成参数
+  max_tokens: 4000
+  temperature: 0.1
+  
+  # DeepSeek特定配置
+  deepseek:
+    base_url: "https://api.deepseek.com"
+    timeout: 60
+
+generation:
+  # 代码生成配置
+  max_retries: 3
+  retry_delay: 1
+  
+  # 输出配置
+  output_dir: "generated_contracts"
+  
+  # 验证配置
+  validate_generated_code: true
+
+logging:
+  # 日志配置
+  level: "INFO"
+  file: "logs/synthesis.log"
+  
+  # 控制台输出
+  console: true 
