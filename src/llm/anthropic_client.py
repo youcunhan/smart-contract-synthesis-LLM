@@ -5,6 +5,7 @@ Anthropic客户端实现
 """
 
 import asyncio
+import os
 from typing import Dict, List, Optional
 import anthropic
 from .base import BaseLLMClient, LLMResponse
@@ -13,7 +14,13 @@ from .base import BaseLLMClient, LLMResponse
 class AnthropicClient(BaseLLMClient):
     """Anthropic Claude API客户端"""
     
-    def __init__(self, api_key: str, model: str = "claude-3-sonnet-20240229", **kwargs):
+    def __init__(self, api_key: str = None, model: str = "claude-3-sonnet-20240229", **kwargs):
+        # 如果没有提供API密钥，尝试从环境变量获取
+        if not api_key:
+            api_key = os.getenv("ANTHROPIC_API_KEY")
+            if not api_key:
+                raise ValueError("Anthropic API key not provided and ANTHROPIC_API_KEY environment variable not set")
+        
         super().__init__(api_key, model, **kwargs)
         self.client = anthropic.AsyncAnthropic(api_key=api_key)
     

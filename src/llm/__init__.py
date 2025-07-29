@@ -7,5 +7,6 @@ LLM接口模块
 from .base import BaseLLMClient
 from .openai_client import OpenAIClient
 from .anthropic_client import AnthropicClient
+from .deepseek_client import DeepSeekClient
 
-__all__ = ["BaseLLMClient", "OpenAIClient", "AnthropicClient"] 
+__all__ = ["BaseLLMClient", "OpenAIClient", "AnthropicClient", "DeepSeekClient"] 

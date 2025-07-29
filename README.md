@@ -51,7 +51,14 @@ smart-contract-synthesis-LLM/
 
 ### Requirements
 - Python 3.8+
-- OpenAI API Key or Anthropic API Key
+- OpenAI API Key, Anthropic API Key, or DeepSeek API Key
+
+**API密钥可以通过以下方式设置：**
+1. 配置文件：在 `config/config.yaml` 中设置
+2. 环境变量：设置对应的环境变量
+   - `OPENAI_API_KEY` for OpenAI
+   - `ANTHROPIC_API_KEY` for Anthropic  
+   - `DEEPSEEK_API_KEY` for DeepSeek
 
 ### Install dependencies
 ```bash
@@ -82,11 +89,22 @@ Configure your API key and other settings in `config/config.yaml`:
 
 ```yaml
 llm:
-  provider: "openai"  # or "anthropic"
-  api_key: "your-api-key"
-  model: "gpt-4"
+  provider: "deepseek"  # "openai", "anthropic", or "deepseek"
+  api_key: "your-deepseek-api-key"  # 或使用环境变量 DEEPSEEK_API_KEY
+  model: "deepseek-chat"
+  
+  # DeepSeek特定配置
+  deepseek:
+    base_url: "https://api.deepseek.com"
+    timeout: 60
 
 generation:
   max_tokens: 4000
   temperature: 0.1
+```
+
+**或者使用环境变量（推荐）：**
+```bash
+export DEEPSEEK_API_KEY="your-deepseek-api-key"
+# 然后配置文件中的 api_key 可以设为空或占位符
 ```

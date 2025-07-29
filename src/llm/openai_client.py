@@ -5,6 +5,7 @@ OpenAI客户端实现
 """
 
 import asyncio
+import os
 from typing import Dict, List, Optional
 from openai import AsyncOpenAI
 from .base import BaseLLMClient, LLMResponse
@@ -13,7 +14,13 @@ from .base import BaseLLMClient, LLMResponse
 class OpenAIClient(BaseLLMClient):
     """OpenAI API客户端"""
     
-    def __init__(self, api_key: str, model: str = "gpt-4", **kwargs):
+    def __init__(self, api_key: str = None, model: str = "gpt-4", **kwargs):
+        # 如果没有提供API密钥，尝试从环境变量获取
+        if not api_key:
+            api_key = os.getenv("OPENAI_API_KEY")
+            if not api_key:
+                raise ValueError("OpenAI API key not provided and OPENAI_API_KEY environment variable not set")
+        
         super().__init__(api_key, model, **kwargs)
         self.client = AsyncOpenAI(api_key=api_key)
     

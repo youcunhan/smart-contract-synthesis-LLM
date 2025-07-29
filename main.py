@@ -15,7 +15,7 @@ from typing import Optional
 # Add src directory to Python path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
-from src.llm import OpenAIClient, AnthropicClient
+from src.llm import OpenAIClient, AnthropicClient, DeepSeekClient
 from src.generator import ContractGenerator
 from src.sketch import SketchParser, SketchValidator
 from src.libraries import LibraryDocsManager
@@ -39,8 +39,19 @@ class SmartContractSynthesizer:
         provider = llm_config["provider"]
         api_key = llm_config["api_key"]
         
-        if not api_key:
-            raise ValueError("Please set your API key in config/config.yaml")
+        # 如果配置文件中没有API密钥，尝试从环境变量获取
+        if not api_key or api_key == "your-deepseek-api-key-here":
+            if provider == "openai":
+                api_key = os.getenv("OPENAI_API_KEY")
+            elif provider == "anthropic":
+                api_key = os.getenv("ANTHROPIC_API_KEY")
+            elif provider == "deepseek":
+                api_key = os.getenv("DEEPSEEK_API_KEY")
+            
+            if api_key:
+                print(f"✅ 从环境变量获取{provider} API密钥")
+            else:
+                raise ValueError(f"Please set your {provider.upper()}_API_KEY environment variable or in config/config.yaml")
         
         if provider == "openai":
             return OpenAIClient(
@@ -55,6 +66,17 @@ class SmartContractSynthesizer:
                 model=llm_config["model"],
                 max_tokens=llm_config["max_tokens"],
                 temperature=llm_config["temperature"]
+            )
+        elif provider == "deepseek":
+            # 获取DeepSeek特定配置
+            deepseek_config = llm_config.get("deepseek", {})
+            return DeepSeekClient(
+                api_key=api_key,
+                model=llm_config["model"],
+                max_tokens=llm_config["max_tokens"],
+                temperature=llm_config["temperature"],
+                base_url=deepseek_config.get("base_url", "https://api.deepseek.com"),
+                timeout=deepseek_config.get("timeout", 60)
             )
         else:
             raise ValueError(f"Unsupported LLM provider: {provider}")
