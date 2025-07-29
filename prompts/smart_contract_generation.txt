@@ -1,0 +1,20 @@
+# Smart Contract Generation with Sketch and Library Usage
+
+---
+# 1. Contract Generation from Sketch
+You are a Solidity smart contract expert. Given the following sketch template, generate a complete, standard, and deployable Solidity smart contract. The contract should strictly follow the structure, specifications, and constraints described in the sketch. Add necessary comments to the code.
+
+Sketch Template:
+{sketch}
+
+---
+# 2. Library Learning and Usage
+You have access to a set of Solidity libraries with documentation and best practices. Analyze the sketch and, if relevant, utilize appropriate libraries to improve security, reliability, or code quality. You can refer to the following library documentation:
+
+{library_docs}
+
+---
+# 3. Output Format
+- Provide only the Solidity contract code as your answer.
+- Ensure the code is ready to deploy and well-commented.
+- If you use any libraries, include the relevant import statements and usage examples in the contract. 

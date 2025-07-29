@@ -1,0 +1,20 @@
+Given the following local and global specifications for a smart contract (LaTeX/math notation is allowed):
+
+Local specifications (for each function): pre/post conditions describing intended state updates.
+Global safety specifications: invariants or constraints that must hold across all reachable states and execution traces.
+
+Generate a contract sketch in the standard format, including:
+- Contract name
+- State variables
+- Structs
+- Events
+- Function definitions, each annotated with its pre/post conditions
+- All global safety specifications clearly marked at the top or in a dedicated section
+- If needed, include calls to external contracts or libraries (e.g., SafeMath, ERC20) to satisfy the specifications.
+
+Do not generate full Solidity code, only the sketch structure.
+
+Input specifications:
+{spec}
+
+Output the sketch in plain text. 

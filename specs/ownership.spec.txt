@@ -1,0 +1,2 @@
+Global: owner != 0x0.
+Local: function transferOwnership(address newOwner): pre: msg.sender == owner && newOwner != 0x0, post: owner == newOwner. 

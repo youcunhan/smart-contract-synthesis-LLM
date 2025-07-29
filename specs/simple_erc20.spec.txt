@@ -1,0 +1,3 @@
+Global: totalSupply >= 0.
+Local: function mint(uint256 amount): pre: amount > 0, post: totalSupply == old(totalSupply) + amount.
+Local: function transfer(address to, uint256 amount): pre: balances[msg.sender] >= amount, post: balances[msg.sender] == old(balances[msg.sender]) - amount, balances[to] == old(balances[to]) + amount. 

@@ -1,0 +1,3 @@
+Global: highestBid >= 0.
+Local: function bid(uint256 amount): pre: amount > highestBid, post: highestBid == amount, highestBidder == msg.sender.
+Local: function endAuction(): pre: block.timestamp >= endTime, post: auctionEnded == true. 
