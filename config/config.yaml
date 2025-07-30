@@ -5,7 +5,7 @@ llm:
   provider: "deepseek"
   
   # API密钥 (请替换为你的实际API密钥)
-  api_key: "your-deepseek-api-key-here"
+  api_key: "sk-18b62bdac8fe4edd9eacb4e6fca3d96e"
   
   # 模型名称
   model: "deepseek-chat"

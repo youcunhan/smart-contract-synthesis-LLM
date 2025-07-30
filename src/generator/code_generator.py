@@ -25,47 +25,35 @@ class ContractGenerator:
         self.parser = SketchParser()
         self.validator = SketchValidator()
     
-    async def generate_from_file(self, sketch_file: str, output_file: Optional[str] = None) -> str:
-        """从文件生成合约"""
-        # 解析sketch文件
+    async def generate_from_file(self, sketch_file: str, output_file: Optional[str] = None, library_names: Optional[list] = None) -> str:
+        """Generate contract from file, optionally with specific libraries."""
         sketch = self.parser.parse_file(sketch_file)
-        
-        # 验证sketch
         is_valid, errors, warnings = self.validator.validate(sketch)
         if not is_valid:
-            raise ValueError(f"Sketch验证失败: {errors}")
-        
+            raise ValueError(f"Sketch validation failed: {errors}")
         if warnings:
-            print(f"警告: {warnings}")
-        
-        # 生成合约
-        contract_code = await self.generate_from_sketch(sketch)
-        
-        # 保存到文件
+            print(f"Warning: {warnings}")
+        contract_code = await self.generate_from_sketch(sketch, library_names=library_names)
         if output_file:
             self._save_contract(contract_code, output_file)
-        
         return contract_code
-    
-    async def generate_from_sketch(self, sketch: Sketch) -> str:
-        """从sketch对象生成合约"""
-        # 构建提示词
-        prompt = self.prompt_builder.build_generation_prompt(sketch)
-        
-        # 调用LLM生成代码
+
+    async def generate_from_sketch(self, sketch: Sketch, library_names: Optional[list] = None) -> str:
+        """Generate contract from sketch object, optionally with specific libraries."""
+        # Build prompt
+        prompt = self.prompt_builder.build_generation_prompt(sketch, library_names=library_names)
+        # Save prompt for debugging
+        with open('promote.tmp', 'w', encoding='utf-8') as f:
+            f.write(prompt)
+        # Call LLM
         response = await self.llm_client.generate_with_system_prompt(
-            system_prompt="你是一个专业的Solidity智能合约开发专家。",
+            system_prompt="You are a professional Solidity smart contract developer.",
             user_prompt=prompt,
             max_tokens=4000,
             temperature=0.1
         )
-        
-        # 提取生成的代码
         generated_code = self._extract_solidity_code(response.content)
-        
-        # 验证生成的代码
         validation_result = await self._validate_generated_code(generated_code, sketch)
-        
         return generated_code
     
     def _extract_solidity_code(self, llm_response: str) -> str:

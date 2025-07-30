@@ -26,6 +26,12 @@ class OpenAIClient(BaseLLMClient):
     
     async def generate(self, prompt: str, **kwargs) -> LLMResponse:
         """生成文本响应"""
+        # 保存提示词到文件
+        self._save_prompt_to_file({
+            "prompt": prompt,
+            "kwargs": {**self.kwargs, **kwargs}
+        }, "generate")
+        
         try:
             response = await self.client.chat.completions.create(
                 model=self.model,
@@ -65,6 +71,12 @@ class OpenAIClient(BaseLLMClient):
         **kwargs
     ) -> LLMResponse:
         """使用消息列表生成响应"""
+        # 保存提示词到文件
+        self._save_prompt_to_file({
+            "messages": messages,
+            "kwargs": {**self.kwargs, **kwargs}
+        }, "generate_with_messages")
+        
         try:
             response = await self.client.chat.completions.create(
                 model=self.model,

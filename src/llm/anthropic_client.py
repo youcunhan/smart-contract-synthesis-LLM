@@ -26,6 +26,12 @@ class AnthropicClient(BaseLLMClient):
     
     async def generate(self, prompt: str, **kwargs) -> LLMResponse:
         """生成文本响应"""
+        # 保存提示词到文件
+        self._save_prompt_to_file({
+            "prompt": prompt,
+            "kwargs": {**self.kwargs, **kwargs}
+        }, "generate")
+        
         try:
             response = await self.client.messages.create(
                 model=self.model,
@@ -53,6 +59,13 @@ class AnthropicClient(BaseLLMClient):
         **kwargs
     ) -> LLMResponse:
         """使用系统提示词生成响应"""
+        # 保存提示词到文件
+        self._save_prompt_to_file({
+            "system_prompt": system_prompt,
+            "user_prompt": user_prompt,
+            "kwargs": {**self.kwargs, **kwargs}
+        }, "generate_with_system_prompt")
+        
         try:
             response = await self.client.messages.create(
                 model=self.model,
@@ -80,6 +93,12 @@ class AnthropicClient(BaseLLMClient):
         **kwargs
     ) -> LLMResponse:
         """使用消息列表生成响应"""
+        # 保存提示词到文件
+        self._save_prompt_to_file({
+            "messages": messages,
+            "kwargs": {**self.kwargs, **kwargs}
+        }, "generate_with_messages")
+        
         try:
             # 将消息格式转换为Anthropic格式
             anthropic_messages = []

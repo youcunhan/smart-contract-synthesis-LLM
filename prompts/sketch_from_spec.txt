@@ -1,20 +1,64 @@
-Given the following local and global specifications for a smart contract (LaTeX/math notation is allowed):
+You are a Solidity smart contract architect. Your task is to generate a contract sketch from formal specifications.
 
-Local specifications (for each function): pre/post conditions describing intended state updates.
-Global safety specifications: invariants or constraints that must hold across all reachable states and execution traces.
+## Input Format
+The input contains formal specifications in the following format:
+- **Global specifications**: Invariants that must hold across all states
+- **Local specifications**: Pre/post conditions for each function
 
-Generate a contract sketch in the standard format, including:
-- Contract name
-- State variables
-- Structs
-- Events
-- Function definitions, each annotated with its pre/post conditions
-- All global safety specifications clearly marked at the top or in a dedicated section
-- If needed, include calls to external contracts or libraries (e.g., SafeMath, ERC20) to satisfy the specifications.
+## Output Requirements
+Generate a complete contract sketch that includes:
 
-Do not generate full Solidity code, only the sketch structure.
+### 1. Contract Structure
+- Contract name (derived from functionality)
+- State variables (with appropriate types)
+- Struct definitions (if needed)
+- Event definitions (for important state changes)
 
-Input specifications:
+### 2. Function Specifications
+For each function mentioned in the specifications:
+- Function signature with parameters and return types
+- Pre-conditions (from specifications)
+- Post-conditions (from specifications)
+- Function body as sketch (not full implementation)
+
+### 3. Global Safety
+- Include all global invariants as comments
+- Ensure all functions maintain these invariants
+
+### 4. Format Guidelines
+- Use standard Solidity syntax
+- Include `//@` annotations for specifications
+- Add `//@global` for global invariants
+- Add `//@function` for function specifications
+- Use `old()` notation for pre-state values in post-conditions
+
+## Example Format:
+```
+contract ContractName {
+    // State variables
+    uint256 public totalSupply;
+    mapping(address => uint256) public balances;
+    
+    // Events
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    
+    //@global invariant: totalSupply >= 0
+    
+    function mint(uint256 amount) external {
+        //@function mint pre: amount > 0
+        //@function mint post: totalSupply == old(totalSupply) + amount
+        // Sketch implementation here
+    }
+    
+    function transfer(address to, uint256 amount) external returns (bool) {
+        //@function transfer pre: balances[msg.sender] >= amount
+        //@function transfer post: balances[msg.sender] == old(balances[msg.sender]) - amount
+        // Sketch implementation here
+    }
+}
+```
+
+## Input Specifications:
 {spec}
 
-Output the sketch in plain text. 
+Generate the contract sketch following the above format and guidelines. 

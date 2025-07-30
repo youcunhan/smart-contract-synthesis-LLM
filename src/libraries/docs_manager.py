@@ -322,6 +322,23 @@ class LibraryDocsManager:
             summary += "\n"
         
         return summary
+
+    def get_libraries_summary(self, names: list) -> str:
+        """Get summaries for a list of library names."""
+        summaries = []
+        for name in names:
+            summary = self.get_library_summary(name)
+            summaries.append(summary)
+        return '\n'.join(summaries)
+
+    def generate_library_prompt_for_names(self, names: list) -> str:
+        """Generate library usage prompt for a given list of library names."""
+        if not names:
+            return self.generate_library_prompt("")
+        prompt = "## Selected Solidity Libraries\n\n"
+        prompt += "The following libraries are provided for your reference:\n\n"
+        prompt += self.get_libraries_summary(names)
+        return prompt
     
     def get_relevant_libraries(self, keywords: List[str]) -> List[LibraryDoc]:
         """Find relevant libraries by keywords"""

@@ -49,6 +49,12 @@ class DeepSeekClient(BaseLLMClient):
         **kwargs
     ) -> LLMResponse:
         """使用消息列表生成响应"""
+        # 保存提示词到文件
+        self._save_prompt_to_file({
+            "messages": messages,
+            "kwargs": {**self.kwargs, **kwargs}
+        }, "generate_with_messages")
+        
         url = f"{self.base_url}/v1/chat/completions"
         
         # 构建请求数据

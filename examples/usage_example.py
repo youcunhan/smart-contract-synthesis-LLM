@@ -34,7 +34,7 @@ async def example_1_basic_usage():
     generator = ContractGenerator(llm_client)
     
     # 4. 从sketch文件生成合约
-    sketch_file = "src/sketch/examples/sheep_farm_sketch.txt"
+    sketch_file = "sketchs/sheep_farm_sketch.txt"
     output_file = "generated_contracts/SheepFarm.sol"
     
     try:
@@ -55,7 +55,7 @@ async def example_2_sketch_validation():
     validator = SketchValidator()
     
     # 解析sketch文件
-    sketch_file = "src/sketch/examples/sheep_farm_sketch.txt"
+    sketch_file = "sketchs/sheep_farm_sketch.txt"
     sketch = parser.parse_file(sketch_file)
     
     # 验证sketch

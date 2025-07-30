@@ -1,0 +1,49 @@
+Here's the contract sketch based on your specifications:
+
+```
+// Global Safety Specifications:
+// G1: totalSupply >= 0 (always non-negative)
+// G2: For all addresses a, balances[a] >= 0 (non-negative balances)
+// G3: sum(balances) == totalSupply (conservation of tokens)
+
+contract Token {
+    // State Variables
+    uint256 public totalSupply;
+    mapping(address => uint256) public balances;
+    
+    // Events
+    event Mint(address indexed minter, uint256 amount);
+    event Transfer(address indexed from, address indexed to, uint256 amount);
+    
+    // Functions
+    
+    /**
+     * @dev Mints new tokens
+     * Pre: amount > 0
+     * Post: totalSupply == old(totalSupply) + amount
+     * Post: balances[msg.sender] == old(balances[msg.sender]) + amount
+     */
+    function mint(uint256 amount) external;
+    
+    /**
+     * @dev Transfers tokens to another address
+     * Pre: balances[msg.sender] >= amount
+     * Pre: to != address(0) (non-null address)
+     * Post: balances[msg.sender] == old(balances[msg.sender]) - amount
+     * Post: balances[to] == old(balances[to]) + amount
+     * Post: totalSupply unchanged
+     */
+    function transfer(address to, uint256 amount) external;
+    
+    // Note: Would likely include SafeMath for arithmetic operations in implementation
+    // Note: Would likely include address(0) checks in implementation
+}
+```
+
+Key points:
+1. Added global invariants for non-negative balances and token conservation
+2. Added standard events for token operations
+3. Included implicit preconditions (like non-zero address)
+4. Added post condition for mint that updates sender's balance
+5. Noted where SafeMath would be used in implementation
+6. Maintained all specified pre/post conditions while adding necessary ones for safety
