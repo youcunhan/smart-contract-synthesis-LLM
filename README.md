@@ -261,11 +261,3 @@ python -m pytest tests/
 ## 📊 Logging
 
 Log files are saved in the `logs/` directory, containing detailed execution information.
-
-## 🤝 Contributing
-
-Welcome to submit Issues and Pull Requests to improve the project.
-
-## 📄 License
-
-This project is licensed under the MIT License.
