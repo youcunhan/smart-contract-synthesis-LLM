@@ -81,7 +81,7 @@ class SmartContractSynthesizer:
         else:
             raise ValueError(f"Unsupported LLM provider: {provider}")
     
-    async def generate_contract(self, sketch_file: str, output_file: Optional[str] = None, library_names: Optional[list] = None) -> str:
+    async def generate_contract(self, sketch_file: str, output_file: str, library_names: Optional[list] = None) -> str:
         """Generate contract, optionally with specific libraries."""
         print(f"Parsing sketch file: {sketch_file}")
         sketch = self.parser.parse_file(sketch_file)
@@ -98,13 +98,8 @@ class SmartContractSynthesizer:
         print(f"✅ Sketch validation passed, contract name: {sketch.contract_name}")
         print("🤖 Generating contract code with LLM...")
         contract_code = await self.generator.generate_from_sketch(sketch, library_names=library_names)
-        if output_file:
-            FileUtils.write_text_file(output_file, contract_code)
-            print(f"✅ Contract saved to: {output_file}")
-        else:
-            default_output = f"generated_contracts/{sketch.contract_name}.sol"
-            FileUtils.write_text_file(default_output, contract_code)
-            print(f"✅ Contract saved to: {default_output}")
+        FileUtils.write_text_file(output_file, contract_code)
+        print(f"✅ Contract saved to: {output_file}")
         return contract_code
     
     async def validate_sketch(self, sketch_file: str):
@@ -207,7 +202,7 @@ async def main():
     parser.add_argument("command", choices=["generate", "validate", "libraries", "library-info", "examples", "specs", "sketch-from-spec"], 
                        help="Command to execute")
     parser.add_argument("--sketch", "-s", help="Path to sketch file")
-    parser.add_argument("--output", "-o", help="Output file path")
+    parser.add_argument("--output", "-o", help="Output file path (default: sketchs/ for sketch-from-spec, generated_contracts/ for generate)")
     parser.add_argument("--library", "-l", help="Comma-separated library names (for generate/library-info command)")
     parser.add_argument("--config", "-c", default="config/config.yaml", help="Path to config file")
     parser.add_argument("--spec", help="Path to specification file for sketch-from-spec command")
@@ -224,7 +219,16 @@ async def main():
             library_names = None
             if args.library:
                 library_names = [name.strip() for name in args.library.split(",") if name.strip()]
-            await synthesizer.generate_contract(args.sketch, args.output, library_names=library_names)
+            
+            # Set default output for generate command
+            output_file = args.output
+            if not output_file:
+                # Extract contract name from sketch file for default output
+                sketch_path = Path(args.sketch)
+                contract_name = sketch_path.stem
+                output_file = f"generated_contracts/{contract_name}.sol"
+            
+            await synthesizer.generate_contract(args.sketch, output_file, library_names=library_names)
         
         elif args.command == "validate":
             if not args.sketch:
@@ -248,10 +252,19 @@ async def main():
             synthesizer.list_specs()
         
         elif args.command == "sketch-from-spec":
-            if not args.spec or not args.output:
-                print("❌ Please specify both --spec (specification file path) and --output for sketch-from-spec command")
+            if not args.spec:
+                print("❌ Please specify the specification file path (--spec)")
                 return
-            await synthesizer.generate_sketch_from_spec(args.spec, args.output)
+            
+            # Set default output for sketch-from-spec command
+            output_file = args.output
+            if not output_file:
+                # Extract spec name for default output
+                spec_path = Path(args.spec)
+                spec_name = spec_path.stem.replace('.spec', '')
+                output_file = f"sketchs/{spec_name}.txt"
+            
+            await synthesizer.generate_sketch_from_spec(args.spec, output_file)
     
     except Exception as e:
         print(f"❌ Error: {e}")
